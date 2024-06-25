@@ -10,8 +10,8 @@ import styles from '../styles/search.module.css'
 export async function getServerSideProps({ query }) {
   const recipes = query.q ? await searchRecipes(query.q) : []; 
   // TODO: use searchRecipes to attach recipes prop based on query parameter
-  return { props: { recipes} }
-};
+  return { props }
+}
 
 export default function Search({recipes}) {
   const router = useRouter()
