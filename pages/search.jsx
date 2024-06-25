@@ -7,11 +7,11 @@ import { searchRecipes } from '../util/recipe'
 import styles from '../styles/search.module.css'
 
 // TODO: destructure query from argument passed to getServerSideProps
-export async function getServerSideProps() {
-  const props = {}
+export async function getServerSideProps({ query }) {
+  const recipes = query.q ? await searchRecipes(query.q) : []; 
   // TODO: use searchRecipes to attach recipes prop based on query parameter
-  return { props }
-}
+  return { props: { recipes} }
+};
 
 export default function Search({recipes}) {
   const router = useRouter()
@@ -21,6 +21,10 @@ export default function Search({recipes}) {
     e.preventDefault()
     if (!query.trim()) return
     // TODO: Use router.replace with router.pathname + queryString to send query to getServerSideProps
+    router.replace({
+      pathname: router.pathname,
+      query: { q: query },
+    }, undefined, { shallow: true });
   }
   return (
     <>
@@ -44,6 +48,9 @@ export default function Search({recipes}) {
         recipes?.length
         ? <section className={styles.results}>
           {/* TODO: Render recipes with RecipePreview Component */}
+          {recipes.map(recipe => (
+            <RecipePreview key={recipe.id} {...recipe} />
+))}
         </section>
         : <p className={styles.noResults}>No Recipes Found!</p>
       }
