@@ -11,6 +11,7 @@ export async function getServerSideProps() {
   const props = {}
   // TODO: use searchRecipes to attach recipes prop based on query parameter
   return { props }
+  
 }
 
 export default function Search({recipes}) {
@@ -21,6 +22,10 @@ export default function Search({recipes}) {
     e.preventDefault()
     if (!query.trim()) return
     // TODO: Use router.replace with router.pathname + queryString to send query to getServerSideProps
+    router.replace({
+      pathname: router.pathname,
+      query: { q: query },
+    }, undefined, { shallow: true });
   }
   return (
     <>
