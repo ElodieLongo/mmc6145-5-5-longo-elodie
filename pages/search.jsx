@@ -7,25 +7,28 @@ import { searchRecipes } from '../util/recipe'
 import styles from '../styles/search.module.css'
 
 // TODO: destructure query from argument passed to getServerSideProps
+// TODO: use searchRecipes to attach recipes prop based on query parameter
 export async function getServerSideProps({ query }) {
-  const recipes = query.q ? await searchRecipes(query.q) : []; 
-  // TODO: use searchRecipes to attach recipes prop based on query parameter
-  return { props }
+  if (!query.q) {
+    return { props: {} };
+  }
+  const recipes = await searchRecipes(query.q);
+  return { props: {recipes } };
 }
 
-export default function Search({recipes}) {
-  const router = useRouter()
-  const [query, setQuery] = useState("")
+export default function Search({ recipes = [] }) {
+  const router = useRouter();
+  const [query, setQuery] = useState("");
 
   function handleSubmit(e) {
-    e.preventDefault()
-    if (!query.trim()) return
+    e.preventDefault();
+    if (!query.trim()) return;
     // TODO: Use router.replace with router.pathname + queryString to send query to getServerSideProps
-    router.replace({
-      pathname: router.pathname,
-      query: { q: query },
-    }, undefined, { shallow: true });
-  }
+    const queryString = `?q=${encodeURIComponent(query.trim())}`;
+    router.replace(`${router.pathname}${queryString}`);
+    setQuery("");
+  };
+
   return (
     <>
       <Head>

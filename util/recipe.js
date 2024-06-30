@@ -2,6 +2,8 @@
 // But beware they will make your tests fail
 // import mockRecipe from '../__tests__/util/mocks/recipeResult.json'
 // import mockSearchResults from '../__tests__/util/mocks/recipeSearchResults.json'
+import fetch from 'node-fetch';
+
 
 export async function getRecipe(id) {
   // return mockRecipe
